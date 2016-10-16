@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 isUpdating = true;
+                mProgressBar.setVisibility(View.VISIBLE);
                 mPresenter.search(s.toString());
             }
 
@@ -65,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        mEditSearch.setText(R.string.fruit);
 
         mPresenter = new Presenter(this);
         mAdapter = new PicturesAdapter(this);
