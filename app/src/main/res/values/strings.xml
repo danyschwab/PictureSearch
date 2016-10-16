@@ -8,4 +8,7 @@
     <string name="dialog_message">Do you want to see more details from this picture?</string>
     <string name="fruits">fruits</string>
     <string name="error">It was not possible to complete the request</string>
+    <string name="user_name">Username: %s</string>
+    <string name="tags">Tags: %s</string>
+    <string name="picture">Picture</string>
 </resources>

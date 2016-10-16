@@ -1,7 +1,9 @@
 package br.com.danyswork.picturesearch.ui;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -19,6 +22,7 @@ import br.com.danyswork.picturesearch.R;
 import br.com.danyswork.picturesearch.listener.PictureItemClickListener;
 import br.com.danyswork.picturesearch.model.Picture;
 import br.com.danyswork.picturesearch.presenter.Presenter;
+import br.com.danyswork.picturesearch.util.Constants;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -86,7 +90,9 @@ public class MainActivity extends AppCompatActivity {
                         builder.setPositiveButton(R.string.label_yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //TODO open new activity passing picture
+                                Intent intent = new Intent(MainActivity.this, PictureDetailActivity.class);
+                                intent.putExtra(Constants.PICTURE, picture);
+                                startActivity(intent);
                             }
                         });
                         builder.setNegativeButton(R.string.label_no, new DialogInterface.OnClickListener() {
@@ -105,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutParams);
 
         recyclerView.setAdapter(mAdapter);
+
+
     }
 
     private void clearContents() {

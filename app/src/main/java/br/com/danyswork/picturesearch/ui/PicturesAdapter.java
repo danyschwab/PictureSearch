@@ -40,12 +40,13 @@ class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
         final Picture picture = mList.get(position);
 
         if (picture != null) {
-            holder.mUserName.setText(picture.getUser());
-            holder.mTags.setText(picture.getTags());
+            holder.mUsername.setText(mContext.getString(R.string.user_name, picture.getUser()));
+            holder.mTags.setText(mContext.getString(R.string.tags, picture.getTags()));
             Picasso.with(mContext)
                     .load(picture.getPreviewURL())
                     .resize(50, 50)
                     .centerCrop()
+                    .placeholder(R.drawable.default_picture)
                     .into(holder.mImageThumbnail);
             holder.itemView.setOnClickListener(mClickListener.onClick(picture));
         }

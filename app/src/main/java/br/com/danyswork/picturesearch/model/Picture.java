@@ -1,7 +1,9 @@
 package br.com.danyswork.picturesearch.model;
 
 
-public class Picture {
+import java.io.Serializable;
+
+public class Picture implements Serializable{
 
     private String user;
     private String tags;

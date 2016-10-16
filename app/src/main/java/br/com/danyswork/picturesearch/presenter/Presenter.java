@@ -2,7 +2,11 @@ package br.com.danyswork.picturesearch.presenter;
 
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.com.danyswork.picturesearch.R;
+import br.com.danyswork.picturesearch.model.Picture;
 import br.com.danyswork.picturesearch.model.Pictures;
 import br.com.danyswork.picturesearch.request.Repository;
 import br.com.danyswork.picturesearch.ui.MainActivity;
@@ -29,15 +33,16 @@ public class Presenter {
             @Override
             public void onResponse(Call<Pictures> call, Response<Pictures> response) {
                 if (mActivity != null) {
-                    mActivity.setContent(response.body().getPictures());
+                    List<Picture> pictures = new ArrayList<>();
+                    if ( response.body() != null ) {
+                        pictures = response.body().getPictures();
+                    }
+                    mActivity.setContent(pictures);
                 }
             }
 
             @Override
             public void onFailure(Call<Pictures> call, Throwable t) {
-                if (mActivity != null) {
-                    Toast.makeText(mActivity, mActivity.getString(R.string.error), Toast.LENGTH_LONG).show();
-                }
             }
         });
     }

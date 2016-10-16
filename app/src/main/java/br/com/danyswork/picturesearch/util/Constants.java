@@ -8,4 +8,5 @@ public class Constants {
     public static final String QUERY = "q";
     public static final String IMAGE_TYPE = "image_type";
     public static final String PHOTO = "photo";
+    public static final String PICTURE = "picture";
 }

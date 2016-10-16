@@ -10,13 +10,13 @@ import br.com.danyswork.picturesearch.R;
 class PictureViewHolder extends RecyclerView.ViewHolder {
 
     ImageView mImageThumbnail;
-    TextView mUserName;
+    TextView mUsername;
     TextView mTags;
 
     PictureViewHolder(View view) {
         super(view);
         mImageThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail_picture);
-        mUserName = (TextView) view.findViewById(R.id.text_user_name);
+        mUsername = (TextView) view.findViewById(R.id.text_username);
         mTags = (TextView) view.findViewById(R.id.text_picture_tags);
     }
 }
