@@ -3,4 +3,7 @@
     <string name="thumbnail_picture">Thumbnail Picture</string>
     <string name="search">Search</string>
     <string name="clear_text">Clear text</string>
+    <string name="label_yes">Yes</string>
+    <string name="label_no">No</string>
+    <string name="dialog_message">Do you want to see more details from this picture?</string>
 </resources>

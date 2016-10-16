@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.danyswork.picturesearch.R;
+import br.com.danyswork.picturesearch.listener.PictureItemClickListener;
 import br.com.danyswork.picturesearch.model.Picture;
 import br.com.danyswork.picturesearch.util.ImageLoader;
 
@@ -17,21 +18,10 @@ class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
 
     private List<Picture> mList;
     private ImageLoader mImageLoader;
+    private PictureItemClickListener mClickListener;
 
-    public PicturesAdapter(Context context) {
+    PicturesAdapter(Context context) {
         mImageLoader = new ImageLoader(context);
-    }
-
-    void setContent(Picture picture) {
-        if (this.mList == null) {
-            this.mList = new ArrayList<>();
-        }
-        if (picture != null) {
-            if (!mList.contains(picture)) {
-                this.mList.add(picture);
-            }
-        }
-        notifyDataSetChanged();
     }
 
     @Override
@@ -52,12 +42,7 @@ class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
             holder.mUserName.setText(picture.getUser());
             holder.mTags.setText(picture.getTags());
             mImageLoader.displayImage(String.valueOf(picture.getPreviewURL()), holder.mImageThumbnail);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //TODO Open picure detail
-                }
-            });
+            holder.itemView.setOnClickListener(mClickListener.onClick(picture));
         }
     }
 
@@ -66,7 +51,23 @@ class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
         return (mList != null ? mList.size() : 0);
     }
 
+    void setContent(Picture picture) {
+        if (this.mList == null) {
+            this.mList = new ArrayList<>();
+        }
+        if (picture != null) {
+            if (!mList.contains(picture)) {
+                this.mList.add(picture);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     void clearContent() {
         mList.clear();
+    }
+
+    void setClickListener(PictureItemClickListener listener){
+        this.mClickListener = listener;
     }
 }

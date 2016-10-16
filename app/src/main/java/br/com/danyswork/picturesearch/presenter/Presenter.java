@@ -7,10 +7,8 @@ public class Presenter {
 
     private Repository mRepository;
     private MainActivity mActivity;
-    private int pageSearch;
 
     public Presenter(MainActivity activity) {
-        this.pageSearch = 1;
         this.mActivity = activity;
         this.mRepository = new Repository();
     }
@@ -20,10 +18,10 @@ public class Presenter {
     }
 
     public void cancelSearch() {
-        pageSearch = 1;
+
     }
 
-    public void search(String s) {
-
+    public void search(String query) {
+        mRepository.search(query);
     }
 }
