@@ -1,83 +1,22 @@
 package br.com.danyswork.picturesearch.util;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.annotation.IdRes;
-import android.util.Log;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.OutputStream;
+public class Utils {
 
-class Utils {
-
-    @IdRes
-    private static int getResourceId(Context context, String resName, String defType, String defPackage) {
-        return context.getResources().getIdentifier(resName, defType, defPackage);
-    }
-
-    static Bitmap getResId(Context context, String fileName) {
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), Utils.getResourceId(context, fileName, "drawable", context.getPackageName()));
-
-        if (bitmap != null) {
-            return bitmap;
-        }
-
-        // I identify images by hashcode. Not a perfect solution, good for the
-        // demo.
-        File f = new File(context.getFilesDir(), fileName);
-
-        // from SD cache
-        return decodeFile(f);
-    }
-
-    // decodes image and scales it to reduce memory consumption
-    private static Bitmap decodeFile(File f) {
-        Bitmap bitmap;
-        try {
-            // decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(new FileInputStream(f), null, o);
-
-            // Find the correct scale value. It should be the power of 2.
-            final int REQUIRED_SIZE = 70;
-            int width_tmp = o.outWidth, height_tmp = o.outHeight;
-            int scale = 1;
-            while (true) {
-                if (width_tmp / 2 < REQUIRED_SIZE
-                        || height_tmp / 2 < REQUIRED_SIZE)
-                    break;
-                width_tmp /= 2;
-                height_tmp /= 2;
-                scale++;
+    public static boolean isNetworkAvailable(Context context) {
+        boolean result = false;
+        if (context != null) {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm != null) {
+                NetworkInfo network = cm.getActiveNetworkInfo();
+                if (network != null) {
+                    result = network.isConnected();
+                }
             }
-
-            // decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            bitmap = BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
-        } catch (FileNotFoundException e) {
-            bitmap = null;
         }
-        return bitmap;
-    }
-
-    static void CopyStream(InputStream is, OutputStream os) {
-        final int buffer_size = 1024;
-        try {
-            byte[] bytes = new byte[buffer_size];
-            for (; ; ) {
-                int count = is.read(bytes, 0, buffer_size);
-                if (count == -1)
-                    break;
-                os.write(bytes, 0, count);
-            }
-        } catch (Exception ex) {
-            Log.e("PictureSearch", ex.getMessage());
-        }
+        return result;
     }
 }

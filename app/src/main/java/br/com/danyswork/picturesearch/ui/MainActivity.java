@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import java.util.List;
+
 import br.com.danyswork.picturesearch.R;
 import br.com.danyswork.picturesearch.listener.PictureItemClickListener;
 import br.com.danyswork.picturesearch.model.Picture;
@@ -30,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mPresenter = new Presenter(this);
+        mAdapter = new PicturesAdapter(this);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list_pictures);
         mEditSearch = (EditText) findViewById(R.id.edit_picture_search);
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 isUpdating = true;
                 mProgressBar.setVisibility(View.VISIBLE);
+                mPresenter.cancelSearch();
                 mPresenter.search(s.toString());
             }
 
@@ -67,10 +73,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mEditSearch.setText(R.string.fruit);
-
-        mPresenter = new Presenter(this);
-        mAdapter = new PicturesAdapter(this);
+        mEditSearch.setText(R.string.fruits);
 
         mAdapter.setClickListener(new PictureItemClickListener() {
             @Override
@@ -111,9 +114,9 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.clearContent();
     }
 
-    public void setContent(Picture picture) {
+    public void setContent(List<Picture> pictures) {
         mProgressBar.setVisibility(View.GONE);
-        mAdapter.setContent(picture);
+        mAdapter.setContent(pictures);
     }
 
 }

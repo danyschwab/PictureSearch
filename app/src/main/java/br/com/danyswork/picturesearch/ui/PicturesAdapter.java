@@ -6,22 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.danyswork.picturesearch.R;
 import br.com.danyswork.picturesearch.listener.PictureItemClickListener;
 import br.com.danyswork.picturesearch.model.Picture;
-import br.com.danyswork.picturesearch.util.ImageLoader;
 
 class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
 
     private List<Picture> mList;
-    private ImageLoader mImageLoader;
+    private Context mContext;
     private PictureItemClickListener mClickListener;
 
     PicturesAdapter(Context context) {
-        mImageLoader = new ImageLoader(context);
+        mContext = context;
     }
 
     @Override
@@ -41,7 +42,11 @@ class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
         if (picture != null) {
             holder.mUserName.setText(picture.getUser());
             holder.mTags.setText(picture.getTags());
-            mImageLoader.displayImage(String.valueOf(picture.getPreviewURL()), holder.mImageThumbnail);
+            Picasso.with(mContext)
+                    .load(picture.getPreviewURL())
+                    .resize(50, 50)
+                    .centerCrop()
+                    .into(holder.mImageThumbnail);
             holder.itemView.setOnClickListener(mClickListener.onClick(picture));
         }
     }
@@ -51,14 +56,14 @@ class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
         return (mList != null ? mList.size() : 0);
     }
 
-    void setContent(Picture picture) {
+    void setContent(List<Picture> pictures) {
         if (this.mList == null) {
             this.mList = new ArrayList<>();
+        } else {
+            this.mList.clear();
         }
-        if (picture != null) {
-            if (!mList.contains(picture)) {
-                this.mList.add(picture);
-            }
+        if (pictures != null) {
+            this.mList.addAll(pictures);
         }
         notifyDataSetChanged();
     }
@@ -67,7 +72,7 @@ class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
         mList.clear();
     }
 
-    void setClickListener(PictureItemClickListener listener){
+    void setClickListener(PictureItemClickListener listener) {
         this.mClickListener = listener;
     }
 }
