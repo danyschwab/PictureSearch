@@ -1,0 +1,14 @@
+dependencies:
+  pre:
+    - echo y | android update sdk --no-ui --all --filter "platform-tools, tool"
+    - echo y | android update sdk --no-ui --all --filter "android-26, build-tools-26.0.1"
+    - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
+    - echo y | android update sdk --no-ui --all --filter "extra-android-support"
+    - echo y | android update sdk --no-ui --all --filter "extra-google-google_play_services"
+    - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
+    - echo y | $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+
+
+test:
+  override:
+    - ./gradlew assembleDebug
