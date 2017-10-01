@@ -35,7 +35,7 @@ public class PictureDetailActivity extends AppCompatActivity {
         textFavorites.setText(String.valueOf(picture.getFavorites()));
         Picasso.with(this)
                 .load(picture.getPreviewURL())
-                .placeholder(R.drawable.default_picture)
+                .placeholder(R.drawable.vector_camera)
                 .into(imagePicture);
     }
 }

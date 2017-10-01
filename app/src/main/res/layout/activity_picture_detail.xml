@@ -17,7 +17,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:contentDescription="@string/picture"
-        android:src="@drawable/default_picture" />
+        android:src="@drawable/vector_camera" />
 
     <TextView
         android:id="@+id/text_username"
@@ -54,7 +54,7 @@
         android:layout_above="@+id/text_comments"
         android:layout_centerHorizontal="true"
         android:drawablePadding="@dimen/small"
-        android:drawableStart="@drawable/ic_thumb_up"
+        android:drawableStart="@drawable/vector_like"
         android:gravity="center" />
 
 

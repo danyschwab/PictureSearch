@@ -1,7 +1,6 @@
 package br.com.danyswork.picturesearch.ui;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -23,11 +21,16 @@ import br.com.danyswork.picturesearch.listener.PictureItemClickListener;
 import br.com.danyswork.picturesearch.model.Picture;
 import br.com.danyswork.picturesearch.presenter.Presenter;
 import br.com.danyswork.picturesearch.util.Constants;
+import butterknife.BindView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText mEditSearch;
-    private ProgressBar mProgressBar;
+    @BindView(R.id.list_pictures)
+    RecyclerView recyclerView;
+    @BindView(R.id.edit_picture_search)
+    EditText editSearch;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
     private PicturesAdapter mAdapter;
     private Presenter mPresenter;
@@ -40,10 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mPresenter = new Presenter(this);
         mAdapter = new PicturesAdapter(this);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list_pictures);
-        mEditSearch = (EditText) findViewById(R.id.edit_picture_search);
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        ImageView imageClose = (ImageView) findViewById(R.id.image_clear_text);
+        ImageView imageClose = findViewById(R.id.image_clear_text);
         imageClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mEditSearch.addTextChangedListener(new TextWatcher() {
+        editSearch.addTextChangedListener(new TextWatcher() {
 
             boolean isUpdating;
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 isUpdating = true;
-                mProgressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 mPresenter.cancelSearch();
                 mPresenter.search(s.toString());
             }
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mEditSearch.setText(R.string.fruits);
+        editSearch.setText(R.string.fruits);
 
         mAdapter.setClickListener(new PictureItemClickListener() {
             @Override
@@ -116,14 +116,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void clearContents() {
-        mEditSearch.setText("");
-        mProgressBar.setVisibility(View.GONE);
+        editSearch.setText("");
+        progressBar.setVisibility(View.GONE);
         mPresenter.cancelSearch();
         mAdapter.clearContent();
     }
 
     public void setContent(List<Picture> pictures) {
-        mProgressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
         mAdapter.setContent(pictures);
     }
 

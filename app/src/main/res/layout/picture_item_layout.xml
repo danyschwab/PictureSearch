@@ -20,7 +20,7 @@
             android:layout_height="100dp"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:contentDescription="@string/thumbnail_picture"
-            android:src="@drawable/default_picture" />
+            android:src="@drawable/vector_camera" />
 
         <TextView
             android:id="@+id/text_username"

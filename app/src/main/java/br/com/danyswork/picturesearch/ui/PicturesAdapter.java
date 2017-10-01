@@ -46,7 +46,7 @@ class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
                     .load(picture.getPreviewURL())
                     .resize(50, 50)
                     .centerCrop()
-                    .placeholder(R.drawable.default_picture)
+                    .placeholder(R.drawable.vector_camera)
                     .into(holder.mImageThumbnail);
             holder.itemView.setOnClickListener(mClickListener.onClick(picture));
         }
