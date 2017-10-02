@@ -7,11 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import java.util.List;
@@ -22,6 +19,10 @@ import br.com.danyswork.picturesearch.model.Picture;
 import br.com.danyswork.picturesearch.presenter.Presenter;
 import br.com.danyswork.picturesearch.util.Constants;
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
+import butterknife.Unbinder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,54 +33,24 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    private PicturesAdapter mAdapter;
-    private Presenter mPresenter;
+    private PicturesAdapter adapter;
+    private Presenter presenter;
+    private boolean isUpdating;
+
+    private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        unbinder = ButterKnife.bind(this);
 
-        mPresenter = new Presenter(this);
-        mAdapter = new PicturesAdapter(this);
-
-        ImageView imageClose = findViewById(R.id.image_clear_text);
-        imageClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearContents();
-            }
-        });
-
-        editSearch.addTextChangedListener(new TextWatcher() {
-
-            boolean isUpdating;
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (isUpdating) {
-                    isUpdating = false;
-                    return;
-                }
-                isUpdating = true;
-                progressBar.setVisibility(View.VISIBLE);
-                mPresenter.cancelSearch();
-                mPresenter.search(s.toString());
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+        presenter = new Presenter(this);
+        adapter = new PicturesAdapter(this);
 
         editSearch.setText(R.string.fruits);
 
-        mAdapter.setClickListener(new PictureItemClickListener() {
+        adapter.setClickListener(new PictureItemClickListener() {
             @Override
             public View.OnClickListener onClick(final Picture picture) {
                 return new View.OnClickListener() {
@@ -110,21 +81,45 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutParams = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutParams);
 
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
+    }
 
+    @Override
+    protected void onDestroy() {
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
+        super.onDestroy();
+    }
+
+    @OnClick(R.id.image_clear_text)
+    public void onClickClose() {
+        clearContents();
+    }
+
+    @OnTextChanged(R.id.edit_picture_search)
+    public void onTextChanged(CharSequence s) {
+        if (isUpdating) {
+            isUpdating = false;
+            return;
+        }
+        isUpdating = true;
+        progressBar.setVisibility(View.VISIBLE);
+        presenter.cancelSearch();
+        presenter.search(s.toString());
 
     }
 
     private void clearContents() {
         editSearch.setText("");
         progressBar.setVisibility(View.GONE);
-        mPresenter.cancelSearch();
-        mAdapter.clearContent();
+        presenter.cancelSearch();
+        adapter.clearContent();
     }
 
     public void setContent(List<Picture> pictures) {
         progressBar.setVisibility(View.GONE);
-        mAdapter.setContent(pictures);
+        adapter.setContent(pictures);
     }
 
 }

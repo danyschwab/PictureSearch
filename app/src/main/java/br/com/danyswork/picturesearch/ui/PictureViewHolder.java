@@ -6,17 +6,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import br.com.danyswork.picturesearch.R;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 class PictureViewHolder extends RecyclerView.ViewHolder {
 
-    ImageView mImageThumbnail;
-    TextView mUsername;
-    TextView mTags;
+    @BindView(R.id.image_thumbnail_picture)
+    ImageView imageThumbnail;
+    @BindView(R.id.text_username)
+    TextView username;
+    @BindView(R.id.text_picture_tags)
+    TextView tags;
 
     PictureViewHolder(View view) {
         super(view);
-        mImageThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail_picture);
-        mUsername = (TextView) view.findViewById(R.id.text_username);
-        mTags = (TextView) view.findViewById(R.id.text_picture_tags);
+        ButterKnife.bind(this, view);
     }
 }

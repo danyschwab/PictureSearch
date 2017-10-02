@@ -17,12 +17,12 @@ import br.com.danyswork.picturesearch.model.Picture;
 
 class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
 
-    private List<Picture> mList;
-    private Context mContext;
-    private PictureItemClickListener mClickListener;
+    private List<Picture> data;
+    private Context context;
+    private PictureItemClickListener clickListener;
 
     PicturesAdapter(Context context) {
-        mContext = context;
+        this.context = context;
     }
 
     @Override
@@ -34,46 +34,46 @@ class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
     @Override
     public void onBindViewHolder(PictureViewHolder holder, int position) {
 
-        if (mList.isEmpty())
+        if (data.isEmpty())
             return;
 
-        final Picture picture = mList.get(position);
+        final Picture picture = data.get(position);
 
         if (picture != null) {
-            holder.mUsername.setText(mContext.getString(R.string.user_name, picture.getUser()));
-            holder.mTags.setText(mContext.getString(R.string.tags, picture.getTags()));
-            Picasso.with(mContext)
+            holder.username.setText(context.getString(R.string.user_name, picture.getUser()));
+            holder.tags.setText(context.getString(R.string.tags, picture.getTags()));
+            Picasso.with(context)
                     .load(picture.getPreviewURL())
                     .resize(50, 50)
                     .centerCrop()
                     .placeholder(R.drawable.vector_camera)
-                    .into(holder.mImageThumbnail);
-            holder.itemView.setOnClickListener(mClickListener.onClick(picture));
+                    .into(holder.imageThumbnail);
+            holder.itemView.setOnClickListener(clickListener.onClick(picture));
         }
     }
 
     @Override
     public int getItemCount() {
-        return (mList != null ? mList.size() : 0);
+        return (data != null ? data.size() : 0);
     }
 
     void setContent(List<Picture> pictures) {
-        if (this.mList == null) {
-            this.mList = new ArrayList<>();
+        if (this.data == null) {
+            this.data = new ArrayList<>();
         } else {
-            this.mList.clear();
+            this.data.clear();
         }
         if (pictures != null) {
-            this.mList.addAll(pictures);
+            this.data.addAll(pictures);
         }
         notifyDataSetChanged();
     }
 
     void clearContent() {
-        mList.clear();
+        data.clear();
     }
 
     void setClickListener(PictureItemClickListener listener) {
-        this.mClickListener = listener;
+        this.clickListener = listener;
     }
 }
