@@ -10,23 +10,36 @@ import com.squareup.picasso.Picasso;
 import br.com.danyswork.picturesearch.R;
 import br.com.danyswork.picturesearch.model.Picture;
 import br.com.danyswork.picturesearch.util.Constants;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class PictureDetailActivity extends AppCompatActivity {
+
+    @BindView(R.id.text_username)
+    TextView textUsername;
+    @BindView(R.id.text_picture_tags)
+    TextView textTags;
+    @BindView(R.id.text_likes)
+    TextView textLikes;
+    @BindView(R.id.text_comments)
+    TextView textComments;
+    @BindView(R.id.text_favorites)
+    TextView textFavorites;
+    @BindView(R.id.image_picture)
+    ImageView imagePicture;
+
+    private Unbinder unbinder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_detail);
 
+        unbinder = ButterKnife.bind(this);
+
         Picture picture = (Picture) getIntent().getSerializableExtra(Constants.PICTURE);
-
-        TextView textUsername = (TextView) findViewById(R.id.text_username);
-        TextView textTags = (TextView) findViewById(R.id.text_picture_tags);
-        TextView textLikes = (TextView) findViewById(R.id.text_likes);
-        TextView textComments = (TextView) findViewById(R.id.text_comments);
-        TextView textFavorites = (TextView) findViewById(R.id.text_favorites);
-
-        ImageView imagePicture = (ImageView) findViewById(R.id.image_picture);
 
         textUsername.setText(getString(R.string.user_name, picture.getUser()));
         textTags.setText(getString(R.string.tags, picture.getTags()));
@@ -37,5 +50,13 @@ public class PictureDetailActivity extends AppCompatActivity {
                 .load(picture.getPreviewURL())
                 .placeholder(R.drawable.vector_camera)
                 .into(imagePicture);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
+        super.onDestroy();
     }
 }
