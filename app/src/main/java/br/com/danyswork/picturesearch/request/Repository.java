@@ -22,23 +22,40 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Repository {
 
-    private Context mContext;
-    private PixabayService mService;
-    private Call<Pictures> mSearch;
+    private Context context;
+    private PixabayService service;
+    private Call<Pictures> search;
 
     public Repository(Context context) {
 
-        this.mContext = context;
+        this.context = context;
 
         //setup cache
         File httpCacheDirectory = new File(context.getCacheDir(), "responses");
         int cacheSize = 10 * 1024 * 1024; // 10 MiB
         Cache cache = new Cache(httpCacheDirectory, cacheSize);
 
+        final Interceptor interceptor = new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Response originalResponse = chain.proceed(chain.request());
+                if (Utils.isNetworkAvailable(Repository.this.context)) {
+                    int maxAge = 60; // read from cache for 1 minute
+                    return originalResponse.newBuilder()
+                            .header("Cache-Control", "public, max-age=" + maxAge)
+                            .build();
+                } else {
+                    int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
+                    return originalResponse.newBuilder()
+                            .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
+                            .build();
+                }
+            }
+        };
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .cache(cache)
-                .addInterceptor(mInterceptor)
+                .addInterceptor(interceptor)
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -47,7 +64,7 @@ public class Repository {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        mService = retrofit.create(PixabayService.class);
+        service = retrofit.create(PixabayService.class);
     }
 
     private Map<String, String> createQueryParans(String query) {
@@ -60,31 +77,15 @@ public class Repository {
 
     public void search(String query, Callback<Pictures> callback) {
         Map<String, String> options = createQueryParans(query);
-        mSearch = mService.search(options);
-        mSearch.enqueue(callback);
+        search = service.search(options);
+        search.enqueue(callback);
     }
 
     public void cancelSearch() {
-        if (mSearch != null) {
-            mSearch.cancel();
+        if (search != null) {
+            search.cancel();
         }
     }
 
-    private final Interceptor mInterceptor = new Interceptor() {
-        @Override
-        public Response intercept(Interceptor.Chain chain) throws IOException {
-            Response originalResponse = chain.proceed(chain.request());
-            if (Utils.isNetworkAvailable(mContext)) {
-                int maxAge = 60; // read from cache for 1 minute
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", "public, max-age=" + maxAge)
-                        .build();
-            } else {
-                int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
-                return originalResponse.newBuilder()
-                        .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
-                        .build();
-            }
-        }
-    };
+
 }

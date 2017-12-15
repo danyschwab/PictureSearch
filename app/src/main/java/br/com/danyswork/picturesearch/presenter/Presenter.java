@@ -1,11 +1,10 @@
 package br.com.danyswork.picturesearch.presenter;
 
-import android.widget.Toast;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.danyswork.picturesearch.R;
 import br.com.danyswork.picturesearch.model.Picture;
 import br.com.danyswork.picturesearch.model.Pictures;
 import br.com.danyswork.picturesearch.request.Repository;
@@ -16,33 +15,34 @@ import retrofit2.Response;
 
 public class Presenter {
 
-    private Repository mRepository;
-    private MainActivity mActivity;
+    private Repository repository;
+    private MainActivity activity;
 
     public Presenter(MainActivity activity) {
-        this.mActivity = activity;
-        this.mRepository = new Repository(activity);
+        this.activity = activity;
+        this.repository = new Repository(activity);
     }
 
     public void cancelSearch() {
-        mRepository.cancelSearch();
+        repository.cancelSearch();
     }
 
     public void search(String query) {
-        mRepository.search(query, new Callback<Pictures>() {
+        repository.search(query, new Callback<Pictures>() {
             @Override
-            public void onResponse(Call<Pictures> call, Response<Pictures> response) {
-                if (mActivity != null) {
+            public void onResponse(@NonNull Call<Pictures> call, @NonNull Response<Pictures> response) {
+                if (activity != null) {
                     List<Picture> pictures = new ArrayList<>();
-                    if ( response.body() != null ) {
-                        pictures = response.body().getPictures();
+                    Pictures body = response.body();
+                    if (  body != null ) {
+                        pictures = body.getPictures();
                     }
-                    mActivity.setContent(pictures);
+                    activity.setContent(pictures);
                 }
             }
 
             @Override
-            public void onFailure(Call<Pictures> call, Throwable t) {
+            public void onFailure(@NonNull Call<Pictures> call, Throwable t) {
             }
         });
     }
